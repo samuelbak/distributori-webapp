@@ -3,25 +3,46 @@
   <head>
     <style>
        #map {
-        height: 400px;
-        width: 100%;
+        height: 100vh;
+        width: 100vw;
        }
     </style>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
     <div id="map"></div>
     <script>
       function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
+        	center: new google.maps.LatLng(-33.863276, 151.207977),
+          	zoom: 2
         });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
+        getData(map);
+      }
+
+      function getData(map){
+    	  var requestURL = 'http://localhost/util/GetData.php';
+    	  var request = new XMLHttpRequest();
+    	  request.open('GET', requestURL);
+    	  request.responseType = 'json';
+    	  request.send();
+    	  request.onload = function(){
+				var data = request.response;
+				CreateMarker(data, map);
+       		}
+      }
+
+      function CreateMarker(jsonData, map){
+			//var locations = jsonData['idImpianto'];
+			//var locations = JSON.parse(jsonData);
+          	//for(i = 0; i < Object.keys(jsonData).length; i++){
+       		
+          	for(x in jsonData){
+		    	  var position = {lat: parseFloat(jsonData[x].Latitudine), lng: parseFloat(jsonData[x].Longitudine)};
+		    	  var marker = new google.maps.Marker({
+		              position: position,
+		              map: map
+		            });
+          	}
       }
     </script>
     <script async defer
