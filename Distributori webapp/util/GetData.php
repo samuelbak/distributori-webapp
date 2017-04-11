@@ -1,7 +1,7 @@
 <?php
 	require ('./dbConnector.php');
 	
-	$query = "SELECT Latitudine, Longitudine FROM impianti";
+	$query = "SELECT Latitudine, Longitudine, Bandiera FROM impianti";
 	$rs = sendQuery($query);
 	$array = array();
 	

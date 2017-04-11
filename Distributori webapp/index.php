@@ -38,7 +38,7 @@
             });
             var cityCircle = new google.maps.Circle({
                 strokeColor: 'red',
-                strokeOpacity: 0.8,
+                strokeOpacity: 0.35,
                 strokeWeight: 1,
                 fillColor: 'green',
                 fillOpacity: 0.35,
@@ -57,26 +57,33 @@
       }
 
       function getData(map){
-    	  var requestURL = 'https://localhost/util/GetData.php';
+    	  var requestURL = './util/GetData.php';
     	  var request = new XMLHttpRequest();
     	  request.open('GET', requestURL);
     	  request.responseType = 'json';
     	  request.send();
     	  request.onload = function(){
 				var data = request.response;
-				CreateMarker(data, map);
+				CreateMarkers(data, map);
        		}
       }
 
-      function CreateMarker(jsonData, map){
+      function CreateMarkers(jsonData, map){
           	var markers = new Array();
+          	
           	for(x in jsonData){
 		    	  var position = {lat: parseFloat(jsonData[x].Latitudine), lng: parseFloat(jsonData[x].Longitudine)};
 		    	  var marker = new google.maps.Marker({
 		              position: position,
 		              map: map
 		            });
+		          marker.content = jsonData[x].Bandiera;
 		          markers.push(marker);
+		          var infoWindow = new google.maps.InfoWindow();
+		          google.maps.event.addListener(marker, 'click', function() {
+			          infoWindow.setContent(this.content);
+			          infoWindow.open(this.map, this);
+		          });
           	}
           	var markerCluster = new MarkerClusterer(map, markers,
                     {imagePath: 'https://localhost/util/m'});
